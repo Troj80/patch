@@ -1,0 +1,41 @@
+From ae550b1b3a049d992f782726d22f22efc5f597e3 Mon Sep 17 00:00:00 2001
+From: chaptsand <chaptsand@gmail.com>
+Date: Wed, 10 Mar 2021 13:29:59 +0800
+Subject: [PATCH] Restore Dim_Behind Flag of Base View and set dim amount to
+ 0.0f
+
+This will fix problem onTouch of apparently boost brightness for xiaomi sm8250 fod implementation.
+This will not fix totally the problem, if into lineage fod hal implementation write on
+disp_param command to enable fod_hbm display function, to solve need concomitant use of composition engine.
+
+Co-authored-by: dataoutputstream <mb150996@gmail.com>
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java   | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 3a644f3e8f7..3489c0104f5 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -332,6 +332,7 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+         mParams.type = WindowManager.LayoutParams.TYPE_DISPLAY_OVERLAY;
+         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
++                WindowManager.LayoutParams.FLAG_DIM_BEHIND |
+                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+         mParams.gravity = Gravity.TOP | Gravity.LEFT;
+ 
+@@ -341,7 +342,9 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+ 
+         mParams.setTitle("Fingerprint on display");
+         mPressedParams.setTitle("Fingerprint on display.touched");
+-
++        
++        mParams.dimAmount = 0.0f;
++        
+         mPressedView = new ImageView(context)  {
+             @Override
+             protected void onDraw(Canvas canvas) {
+-- 
+2.30.1
+
